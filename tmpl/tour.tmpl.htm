@@ -1,0 +1,15 @@
+
+<div class="modal-body app-tour-body" >
+
+            <carousel interval="-1">
+              <slide   ng-repeat="ss in app.screenshots" active="ss.active">
+                <img class="tb-image" ng-src="{{ss.url}}" style="margin:auto;">
+                <div class="carousel-caption">
+                 <h4>{{$index+1}}. {{ss.title}}</h4>
+                  <p>{{ss.desc}}</p>
+                </div>
+               </slide>
+            </carousel>
+
+</div>
+<button ng-click="close(result)" class="app-tour-close btn btn-danger" ><i class="icon-remove"></i></button>

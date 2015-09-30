@@ -1,0 +1,30 @@
+<div>
+  <div class="span3 bs-docs-sidebar ">
+    <div class="affix" data-spy="affix" data-offset-top="200"> 
+      <form class="form-search">
+        <fieldset>
+          <div class="input-append">
+             <input type="text" id="input-sidebar-search" ng-model="search" placeholder="Search {{(apps | filter:{'isPrivate':false,'isPrivate':false}).length}} projects...">
+             <span class="add-on" ng-click="search=''"><i class="icon-remove"></i></span> 
+          </div>
+          <span class="help-block">Project status:</span>
+          <label class="checkbox"><input ng-model="filterProjectInWork" type="checkbox"> In work ({{(apps | filter:{devStatus:"In work",'isPrivate':false}).length}})</label><br>
+          <label class="checkbox"><input ng-model="filterProjectPaused" type="checkbox"> Paused ({{(apps | filter:{devStatus:"Paused",'isPrivate':false}).length}})</label><br>
+          <label class="checkbox"><input ng-model="filterProjectCompleted" type="checkbox"> Completed ({{(apps | filter:{devStatus:"Completed",'isPrivate':false}).length}})</label><br>
+          <label class="checkbox"><input ng-model="filterProjectAbandoned" type="checkbox"> Abandoned ({{(apps | filter:{devStatus:"Abandoned",'isPrivate':false}).length}})</label>
+        </fieldset>
+      </form>
+    </div>
+      
+  </div>
+  <div class="span9">
+
+  <ul class="thumbnails">
+    <li id="section_{{$index}}" class="span12 thumbnail" ng-repeat="app in (filteredItems = (apps | filter:search | filter:isFiltered | orderBy:'dateCreated':true))">
+      <app></app>
+    </li>
+  </ul>
+
+
+  </div>
+</div>
