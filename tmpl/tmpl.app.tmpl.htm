@@ -1,0 +1,126 @@
+   <div>
+      <div class="div-image span8" ng-class="{'abandoned':app.devStatus=='Abandoned'}">  
+        <div ng-show="!app.feedbackForm">
+  
+        <div ng-switch on="app.screenshots.length>0" >
+          <div ng-switch-when="true">
+
+            <a ng-show="!app.showMore" href="" ng-click="app.showMore=true">
+              <img  tooltip="Click to start tour" tooltip-placement="left" tooltip-trigger="mouseenter" class="tb-image" ng-src="{{app.imgDemo}}" alt="">
+            </a>
+            <div ng-hide="!app.showMore"> 
+            <carousel interval="-1">
+              <slide   ng-repeat="ss in app.screenshots" active="ss.active">
+                <img class="tb-image" ng-src="{{ss.url}}" style="margin:auto;">
+                <div class="carousel-caption">
+                 <h4>{{$index+1}}. {{ss.title}}</h4>
+                  <p>{{ss.desc}}</p>
+                </div>
+               </slide>
+            </carousel>
+            </div>
+          </div>
+          <div ng-switch-default>
+            <img class="tb-image" ng-src="{{app.imgDemo}}" alt="">
+          </div> 
+        </div> 
+        <div class="app-icon">
+          <i ng-show="!app.icon" ng-class="{'icon-off':!app.isProd,'icon-ok':app.isProd}"></i>
+          <i ng-show="app.icon" class="{{app.icon}}"></i> 
+        </div>
+        <div ng-show="!app.showMore && app.desc" class="app-desc">
+          <div ng-mouseover="app.iDescTrunc=99999" ng-mouseout="app.iDescTrunc=50" class="caption">
+          <div class="app-desc-div" ng-click="app.iDescTrunc=99999">
+            <span ng-bind-html-unsafe="app.desc | newline | truncate:(app.iDescTrunc || 50)"></span>
+            <a ng-hide="app.iDescTrunc > 50 || !app.desc || app.desc.length < 51"> Show more</a>  
+            <div ng-show="app.features.length>0">
+               
+              <br><strong>Features:</strong>
+              <ul>
+                <li ng-repeat="feature in app.features">{{feature.title}}</li>
+              </ul> 
+            </div>
+          </div>
+
+          <p ng-show="app.screenshots.length>0">
+             <button ng-click="app.showMore=true" class="btn btn-info" type="button"><i class="icon-play"></i> Start tour</button>
+             <button ng-click="startTour()" class="btn" type="button"><i class="icon-play"></i> Fullscreen tour</button>
+          </p>
+          </div>
+        </div> 
+
+        </div> 
+        <div ng-show="app.feedbackForm && !app.showMore" class="app-feedback">
+          <div class="caption">
+            <h5>Feedback surway</h5> 
+            <p>Thanks for your interest. The feedback feature is being in work as of now. </p>
+            <button ng-click="app.feedbackForm = false" class="btn" type="button">Cancel</button>
+          </div>
+        </div>  
+
+          
+      </div>
+      <div class="span4 app-caption">
+        <div class="caption"> 
+          <h3>
+            {{app._id}}
+          </h3>
+          <small>{{app.title}}</small> 
+          <p> 
+             <span ng-show="app.role" tooltip="Role" tooltip-trigger="mouseenter">{{app.role}}, </span>
+             <span tooltip="App lifecycle" tooltip-trigger="mouseenter">
+               {{ app.dateCreated | date: 'MMM yyyy'}} - 
+               <span ng-show="app.dateEnded">{{ app.dateEnded | date: 'MMM yyyy'}}</span>
+               <span ng-show="!app.dateEnded"> Today</span>
+             </span>  
+          </p>
+          <p>
+             <span class="label label-info">{{app.platform}}</span>
+             <span ng-repeat="tag in app.tags"><span class="label">{{tag}}</span> </span>
+          </p>
+
+          <p ng-show="app.screenshots.length>0"> 
+            <a ng-show="app.showMore!=true" href="" ng-click="app.showMore=true">
+              <i class=icon-play></i> Start tour
+            </a>
+            <a href="" ng-show="app.showMore" ng-click="app.showMore=false" class="text-error"><i class="icon-stop"></i> End tour</a>
+            //
+            <a href="" ng-click="startTour()" tooltip="Start tool in fullscreen mode" tooltip-trigger="mouseenter">
+              Fullscreen <i class=icon-external-link></i>
+            </a>
+            
+          </p>
+
+          <p> 
+            <a ng-show="app.role!='Employee' && !app.feedbackForm" href="" ng-click="app.feedbackForm = true">
+              <i class=icon-bullhorn></i> Give feedback
+            </a>
+          </p>
+
+          
+          <div class="app-div-bottom caption">
+          <p class=app-social> 
+            <a ng-show="app.twitterID"    tooltip="Visit Twitter" tooltip-trigger="mouseenter" href="http://www.twitter.com/{{app.twitterID}}" target="_blank" class=lead><i class=icon-twitter></i></a>
+            <a ng-show="app.urlGPlus"     tooltip="Visit G+" tooltip-trigger="mouseenter" href="{{app.urlGPlus}}" target="_blank" class=lead><i class=icon-google-plus></i></a>
+            <a ng-show="app.urlBlog"      tooltip="Official Blog" tooltip-trigger="mouseenter" href="{{app.urlBlog}}" target="_blank" class=lead><i class=icon-rss></i></a>
+            <a ng-show="app.urlRepo"      tooltip="Public code repository" tooltip-trigger="mouseenter" href="{{app.urlRepo}}" target="_blank" class=lead><i class=icon-code></i></a>
+            <a ng-show="app.emailSupport" tooltip="Send email to support" tooltip-trigger="mouseenter" href="mailto:{{app.emailSupport}}" target="_blank" class=lead><i class=icon-envelope></i></a>
+
+          </p>
+          <p>
+             <a target="_blank" tooltip="Open app in new tab" tooltip-trigger="mouseenter" href="{{app.urlProd}}" ng-show="app.isProd && app.urlProd" class="btn btn-primary" type="button"><i class="icon-rocket"></i> Launch</a>
+             <a target="_blank" href="{{app.urlDemo}}" ng-show="app.urlDemo" class="btn" type="button"><i class="icon-play"></i> Demo</a>
+             <a class="btn no-client" href="#/app/{{app._id}}" type="button"><i class="icon-edit"></i></a>
+          </p>
+          </div>
+         
+
+          <div class="app-ribbon" tooltip="Project status" tooltip-trigger="mouseenter">
+             <span class="label" ng-class="{'label-info':(app.devStatus=='Completed'),'label-success':(app.devStatus=='In work'),'label':(app.devStatus=='Paused'),'label-inverse':(app.devStatus=='Abandoned')}">{{app.devStatus}}</span>
+          </div>
+        </div>
+
+      </div>
+
+ 
+    </div>
