@@ -1,0 +1,103 @@
+<h2>My Apps</h2>
+
+<div ng-show="loading">
+  <p>Loading...</p>
+</div>
+
+<div ng-show="!loading">
+
+<div class="well well-small">
+  <form style="margin:0px;" class="form-inline">
+  <div class="input-append">
+    <input  class="input-medium" type="text" ng-model="search" placeholder="Search...">
+    <span class="add-on" ng-click="search=''"><i class="icon-remove"></i></span> 
+  </div>
+  Status:
+  <select class="input-medium" ng-model=filterStatus >
+    <option value="!notavailable" selected>All</option>
+    <option value="In work">In work</option>
+    <option value="Abandoned">Abandoned</option>
+    <option value="Paused">Paused</option>
+  </select>
+  Sort by
+  <select class="input-medium" ng-model=sort placeholder="Sort by...">
+    <option value="dateCreated">Created</option>
+    <option value="dateUpdated">Updated</option>
+    <option value="isProd">Productive</option>
+  </select>
+  <label class="checkbox">
+    <input ng-model="sortReverse" type="checkbox"> Reverse
+  </label>
+
+  </form>
+</div>
+
+<table ng-hide="filteredItems.length < 1" class=table>
+  <thead>
+    <tr> 
+      <th colspan=2>ID</th>
+      <th>Type</th> 
+      <th>Role</th> 
+      <th>Action</th> 
+      <th>Status</th>      
+      <th>URL</th>
+      <th>Updated</th>
+    </tr>
+  </thead>
+  <tbody>
+  <tr ng-class="{'muted':!app.isProd}" ng-repeat="app in (filteredItems = (apps | filter:search | filter:{'devStatus':filterStatus}| orderBy:sort:sortReverse))">
+    <td>
+      <span class="lead">
+        <i ng-show="!app.icon" ng-class="{'icon-off':!app.isProd,'icon-ok':app.isProd}"></i>
+        <i ng-show="app.icon" class="{{app.icon}}"></i> 
+      </span>
+    </td><td>
+      <a class="lead" href="" ng-click="changeView(app._id)" >{{app._id}}</a> <small>{{app.title}}</small>
+    </td>
+    <td>
+     <i class="icon-{{getPlatform(app.platform)}}"></i>
+    </td>
+    <td>
+     {{app.role}}
+    </td>
+    <td>
+      <div class="btn-group">
+         <a ng-show="app.ssID" target="_blank" href="http://shufflingsux.appspot.com/edit/{{app.ssID}}" class="btn btn-small"><i class=icon-edit></i></a>
+         <a ng-show="app.urlFritzPutty" target="_blank" href="{{app.urlFritzPutty}}" class="btn btn-small"><i class=icon-magic></i></a>
+      </div>
+    </td>
+    <td>
+      <span class="badge badge-important" ng-show="app.todos">{{(app.todos | filter:'false').length}}</span>
+
+      <span class="label" ng-class="{'label-info':(app.devStatus=='Completed'),'label-success':(app.devStatus=='In work'),'label':(app.devStatus=='Paused'),'label-inverse':(app.devStatus=='Abandoned')}">{{app.devStatus}}</span>
+      <span ng-show="app.devStatus!='Abandoned'">
+        <span class="label label-warning" ng-show="!app.screenshots || app.screenshots.length < 1">No screenshots</span>  
+        <span class="label label-warning" ng-show="!app.tags|| app.tags.length < 1">No tags</span>  
+
+      </span>
+    </td>
+    <td>
+      <a ng-show="app.isProd && app.urlProd" href="{{app.urlProd}}" target=_blank>{{app.urlProd | truncate:20}}</a>
+    </td>
+    <td>{{ app.dateUpdated | date: 'dd.MM.yy'}}</td>
+
+  </tr>
+  </tbody>
+</table>
+
+<div class="alert alert-info" ng-show="filteredItems.length < 1">
+  No apps found.
+</div>
+
+
+
+<form  class="well well-small">
+  <h5>Register new application</h5>
+  <div class="input-append">
+    <input class="input-large" id="appendedInputButton" ng-model="newapp" type="text">
+    <button class="btn" ng-click="addApp()" type="button">Add App</button>
+  </div>
+</form>
+
+
+</div>
