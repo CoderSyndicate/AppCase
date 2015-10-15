@@ -9,7 +9,7 @@ angular.module('widgets', []).directive('app', function(){
       replace: true,
       transclude: true,
       scope: { },
-      templateUrl: 'tmpl/app.tmpl.htm',
+      templateUrl: 'tmpl/tmpl.app.tmpl.htm',
       controller:function($scope,$dialog){
         $scope.app= $scope.$parent.app    
 

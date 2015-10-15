@@ -9,8 +9,8 @@
   "dependencies": {
     "devmode": "0.0.8",
     "serve-static": "^1.10.0",
-    "sfss.api.endpoint": "0.0.2",
-    "sfss.service": "0.0.2"
+    "sfss.api.endpoint": "^0.0.*",
+    "sfss.service": "^0.0.*"
   },
   "devDependencies": {
     "chai": "*",

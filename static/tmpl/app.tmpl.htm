@@ -1,126 +1,576 @@
-   <div>
-      <div class="div-image span8" ng-class="{'abandoned':app.devStatus=='Abandoned'}">  
-        <div ng-show="!app.feedbackForm">
-  
-        <div ng-switch on="app.screenshots.length>0" >
-          <div ng-switch-when="true">
 
-            <a ng-show="!app.showMore" href="" ng-click="app.showMore=true">
-              <img  tooltip="Click to start tour" tooltip-placement="left" tooltip-trigger="mouseenter" class="tb-image" ng-src="{{app.imgDemo}}" alt="">
-            </a>
-            <div ng-hide="!app.showMore"> 
-            <carousel interval="-1">
-              <slide   ng-repeat="ss in app.screenshots" active="ss.active">
-                <img class="tb-image" ng-src="{{ss.url}}" style="margin:auto;">
-                <div class="carousel-caption">
-                 <h4>{{$index+1}}. {{ss.title}}</h4>
-                  <p>{{ss.desc}}</p>
-                </div>
-               </slide>
-            </carousel>
-            </div>
-          </div>
-          <div ng-switch-default>
-            <img class="tb-image" ng-src="{{app.imgDemo}}" alt="">
-          </div> 
-        </div> 
-        <div class="app-icon">
-          <i ng-show="!app.icon" ng-class="{'icon-off':!app.isProd,'icon-ok':app.isProd}"></i>
-          <i ng-show="app.icon" class="{{app.icon}}"></i> 
-        </div>
-        <div ng-show="!app.showMore && app.desc" class="app-desc">
-          <div ng-mouseover="app.iDescTrunc=99999" ng-mouseout="app.iDescTrunc=50" class="caption">
-          <div class="app-desc-div" ng-click="app.iDescTrunc=99999">
-            <span ng-bind-html-unsafe="app.desc | newline | truncate:(app.iDescTrunc || 50)"></span>
-            <a ng-hide="app.iDescTrunc > 50 || !app.desc || app.desc.length < 51"> Show more</a>  
-            <div ng-show="app.features.length>0">
-               
-              <br><strong>Features:</strong>
-              <ul>
-                <li ng-repeat="feature in app.features">{{feature.title}}</li>
-              </ul> 
-            </div>
-          </div>
+<div class="div-sticky">
+  <h2>
+    <i ng-show="app.icon" class="{{app.icon}}"></i> {{ id }}
+    <small>{{ app.dateUpdated | date: 'mediumDate'}}</small>
+    <span class="pull-right">
+      <button ng-click="save()" ng-click="save()" ng-disabled="isClean() || myForm.$invalid" class="btn btn-primary">Save</button>
+    </span>
+  </h2>
+</div>
 
-          <p ng-show="app.screenshots.length>0">
-             <button ng-click="app.showMore=true" class="btn btn-info" type="button"><i class="icon-play"></i> Start tour</button>
-             <button ng-click="startTour()" class="btn" type="button"><i class="icon-play"></i> Fullscreen tour</button>
-          </p>
-          </div>
-        </div> 
+<div ng-show="loading">
+  <p>Loading...</p>
+</div>
 
-        </div> 
-        <div ng-show="app.feedbackForm && !app.showMore" class="app-feedback">
-          <div class="caption">
-            <h5>Feedback surway</h5> 
-            <p>Thanks for your interest. The feedback feature is being in work as of now. </p>
-            <button ng-click="app.feedbackForm = false" class="btn" type="button">Cancel</button>
-          </div>
-        </div>  
+<form ng-show="!loading" name="myForm" class="bs-docs-example form-horizontal">
 
-          
-      </div>
-      <div class="span4 app-caption">
-        <div class="caption"> 
-          <h3>
-            {{app._id}}
-          </h3>
-          <small>{{app.title}}</small> 
-          <p> 
-             <span ng-show="app.role" tooltip="Role" tooltip-trigger="mouseenter">{{app.role}}, </span>
-             <span tooltip="App lifecycle" tooltip-trigger="mouseenter">
-               {{ app.dateCreated | date: 'MMM yyyy'}} - 
-               <span ng-show="app.dateEnded">{{ app.dateEnded | date: 'MMM yyyy'}}</span>
-               <span ng-show="!app.dateEnded"> Today</span>
-             </span>  
-          </p>
-          <p>
-             <span class="label label-info">{{app.platform}}</span>
-             <span ng-repeat="tag in app.tags"><span class="label">{{tag}}</span> </span>
-          </p>
+<tabs>
 
-          <p ng-show="app.screenshots.length>0"> 
-            <a ng-show="app.showMore!=true" href="" ng-click="app.showMore=true">
-              <i class=icon-play></i> Start tour
-            </a>
-            <a href="" ng-show="app.showMore" ng-click="app.showMore=false" class="text-error"><i class="icon-stop"></i> End tour</a>
-            //
-            <a href="" ng-click="startTour()" tooltip="Start tool in fullscreen mode" tooltip-trigger="mouseenter">
-              Fullscreen <i class=icon-external-link></i>
-            </a>
-            
-          </p>
+<pane heading="General">
 
-          <p> 
-            <a ng-show="app.role!='Employee' && !app.feedbackForm" href="" ng-click="app.feedbackForm = true">
-              <i class=icon-bullhorn></i> Give feedback
-            </a>
-          </p>
+  <div class="control-group">
+    <label class="control-label">Status</label>
+    <div class="controls">
+     <select ng-model="app.devStatus" required>
+        <option value="Paused">Paused</option>
+        <option value="In work">In work</option>
+        <option value="Abandoned">Abandoned</option>
+        <option value="Completed">Completed</option>
 
-          
-          <div class="app-div-bottom caption">
-          <p class=app-social> 
-            <a ng-show="app.twitterID"    tooltip="Visit Twitter" tooltip-trigger="mouseenter" href="http://www.twitter.com/{{app.twitterID}}" target="_blank" class=lead><i class=icon-twitter></i></a>
-            <a ng-show="app.urlGPlus"     tooltip="Visit G+" tooltip-trigger="mouseenter" href="{{app.urlGPlus}}" target="_blank" class=lead><i class=icon-google-plus></i></a>
-            <a ng-show="app.urlBlog"      tooltip="Official Blog" tooltip-trigger="mouseenter" href="{{app.urlBlog}}" target="_blank" class=lead><i class=icon-rss></i></a>
-            <a ng-show="app.urlRepo"      tooltip="Public code repository" tooltip-trigger="mouseenter" href="{{app.urlRepo}}" target="_blank" class=lead><i class=icon-code></i></a>
-            <a ng-show="app.emailSupport" tooltip="Send email to support" tooltip-trigger="mouseenter" href="mailto:{{app.emailSupport}}" target="_blank" class=lead><i class=icon-envelope></i></a>
-
-          </p>
-          <p>
-             <a target="_blank" tooltip="Open app in new tab" tooltip-trigger="mouseenter" href="{{app.urlProd}}" ng-show="app.isProd && app.urlProd" class="btn btn-primary" type="button"><i class="icon-rocket"></i> Launch</a>
-             <a target="_blank" href="{{app.urlDemo}}" ng-show="app.urlDemo" class="btn" type="button"><i class="icon-play"></i> Demo</a>
-             <a class="btn no-client" href="#/app/{{app._id}}" type="button"><i class="icon-edit"></i></a>
-          </p>
-          </div>
-         
-
-          <div class="app-ribbon" tooltip="Project status" tooltip-trigger="mouseenter">
-             <span class="label" ng-class="{'label-info':(app.devStatus=='Completed'),'label-success':(app.devStatus=='In work'),'label':(app.devStatus=='Paused'),'label-inverse':(app.devStatus=='Abandoned')}">{{app.devStatus}}</span>
-          </div>
-        </div>
-
-      </div>
-
- 
+      </select>
     </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Role</label>
+    <div class="controls">
+     <select ng-model="app.role" required>
+        <option value="Owner">Owner</option>
+        <option value="Project Leader">Project Leader</option>
+        <option value="Freelance">Freelance</option>
+        <option value="Employee">Employee</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Private</label>
+    <div class="controls">
+      <label class="checkbox">
+      <input type="checkbox"  ng-model="app.isPrivate">
+         Hide for visitors
+      </label>
+    </div>
+  </div>
+
+
+
+  <div class="control-group">
+    <label class="control-label">Platform</label>
+    <div class="controls">
+     <select ng-model="app.platform" required>
+        <option value="WebApp">WebApp</option>
+        <option value="Android">Android</option>
+        <option value="AppEngine">AppEngine</option>
+        <option value="Website">Website</option>
+      </select>
+      <span ng-show="myForm.platform.$error.required" class="help-inline">Required</span>     
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Tags</label>
+    <div class="controls">
+      <tag-input ng-model="app.tags"></tag-input>
+
+    </div>
+  </div>
+
+  <div   class="control-group">
+    <label class="control-label" >Created</label>
+    <div class="controls">
+      <div class="input-prepend">
+        <span class="add-on"><i class="icon-calendar"></i></span>
+        <input ui-date class="input-medium" type="text" name="dateCreated" ng-model="app.dateCreated" placeholder="Creation date" required>
+      </div>
+      <span ng-show="myForm.dateCreated.$error.required" class="help-inline">Required</span>
+    </div>
+  </div>
+
+
+  <div class="control-group">
+    <label class="control-label">Productive</label>
+    <div class="controls">
+      <label class="checkbox">
+      <input type="checkbox"  ng-model="app.isProd">
+         App is still in use
+      </label>
+    </div>
+  </div>
+
+  <div ng-hide="app.isProd" class="control-group">
+    <label class="control-label" >Deprecated</label>
+    <div class="controls">
+      <div class="input-prepend">
+        <span class="add-on"><i class="icon-calendar"></i></span>
+        <input ui-date class="input-medium" type="text"  ng-required='!app.isProd'  name="dateEnded" ng-model="app.dateEnded" placeholder="Deprecation date">
+      </div>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Production Link</label>
+    <div class="controls">
+      <input type="url" name="urlProd" ng-model="app.urlProd">
+      <span ng-show="myForm.urlProd.$error.url" class="help-inline">Not a URL</span>
+      <a ng-show="app.urlProd && !myForm.urlProd.$error.url" href="{{app.urlProd}}" target="_blank">Visit page</a>
+
+    </div>
+  </div>
+
+
+  <div class="control-group">
+    <label class="control-label">Demo Link</label>
+    <div class="controls">
+      <input type="url" name="urlDemo" ng-model="app.urlDemo">
+      <span ng-show="myForm.urlDemo.$error.url" class="help-inline">Not a URL</span>
+      <a ng-show="app.urlDemo&& !myForm.urlDemo.$error.url" href="{{app.urlDemo}}" target="_blank">Visit page</a>
+    </div>
+  </div>
+
+  <h4>Additional Links</h4>
+
+
+<script>
+
+function LinkEditorController($scope) {
+    $scope._edit=false
+    $scope.xLinkTitle= $scope.link.title
+    $scope.xLinkURL= $scope.link.url
+    if ($scope.link.title == '') $scope._edit=true
+
+    $scope.$watch('xLinkTitle',function(newval, oldval){
+      $scope.link.title=  $scope.xLinkTitle
+      $scope.link.dateUpdated=new Date()
+    })
+
+    $scope.$watch('xLinkURL',function(newval, oldval){
+      $scope.link.url=  $scope.xLinkURL
+      $scope.link.dateUpdated=new Date()
+    })
+
+}
+
+
+
+
+</script>
+
+
+  <div ng-repeat="link in app.links">
+
+    <div ng-controller="LinkEditorController" >
+
+  <div ng-show="!_edit" class="control-group">
+        <label class="control-label">
+          {{xLinkTitle}}
+        </label>
+        <div class="controls">
+          <button class="btn" ng-click="_edit=true">Edit</button>
+          <a ng-show="xLinkURL && !myForm.xLinkURL.$error.url" href="{{xLinkURL}}" target="_blank">{{xLinkURL}}</a>
+        </div>
+      </div>  
+      <div ng-show="_edit" class="control-group">
+        <label class="control-label">
+            <input maxlength="100" minlength="5" class="input-small" required ng-model="xLinkTitle" name="xLinkTitle" placeholder="Title" type="text">          
+        </label>
+        <div class="controls">
+          <div class="field_margin_bottom">
+            <input class="input-xlarge" type="url" name="xLinkURL" ng-model="xLinkURL" placeholder="http://" required>
+            <span ng-show="myForm.xLinkURL.$error.url" class="help-inline">Not an URL</span>
+          </div>  
+          <div class="field_margin_bottom">
+            <button class="btn" ng-click="_edit=false">Done editing</button>
+            <button class="btn btn-danger" type="button" ng-click="app.links.splice($index, 1)"><i class=icon-remove></i></button>
+            <span ng-show="myForm.xLinkTitle.$error.required" class="help-inline">Required</span>
+          </div>        
+          
+        </div>
+      </div>
+
+     
+    </div><!-- END LinkEditorController-->
+  </div>
+
+
+  <div class="control-group">
+    <div class="controls">
+       <p ng-show="!app.links || app.links.length < 1" class="text-warning">No additional links defined.</p>
+
+
+       <button class="btn  btn-success" type="button" ng-click="addLink()">Add Link</button>
+    </div>
+  </div>
+
+
+
+</pane>
+
+
+
+<!-- ABOUT -->
+
+
+
+<pane heading="About">
+  <div class="control-group">
+    <label class="control-label">Title</label>
+    <div class="controls">
+      <input type=text ng-model="app.title" >
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Icon</label>
+    <div class="controls">
+      <input type=text ng-model="app.icon" >
+      <span ng-show="app.icon">Preview: <i class="{{app.icon}}"></i></span>
+      <a href="http://fortawesome.github.io/Font-Awesome/icons/" target="_blank">Font-Awesome</a>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Description</label>
+    <div class="controls">
+      <textarea ng-model="app.desc" rows="6"></textarea>
+    </div>
+  </div>
+
+
+  <script>
+    function FeatureEditorController($scope) {
+      $scope.xFTitle= $scope.feature.title
+      $scope.$watch('xFTitle',function(newval, oldval){
+        $scope.feature.title=  $scope.xFTitle
+        $scope.feature.dateUpdated=new Date()
+      }) 
+  }
+  </script>
+  <div class="control-group">
+    <div class="controls">
+       <strong>Features</strong>
+    </div>
+  </div>
+  <div ng-repeat="feature in app.features">
+    <div class="div-app-features" ng-controller="FeatureEditorController" >
+      <div class="control-group">
+        <label class="control-label">
+          #{{$index+1}} 
+        </label>
+        <div class="controls">
+          <div>
+            <input maxlength="100" minlength="5" class="input-xlarge" required ng-model="xFTitle" name="xFTitle" placeholder="Title" type="text">
+            <button class="btn btn-danger" type="button" ng-click="app.features.splice($index, 1)"><i class=icon-remove></i></button>
+            <span ng-show="myForm.xFTitle.$error.required" class="help-inline">Required</span>
+          </div>
+        </div>
+      </div>  
+    </div><!-- END FeatureEditorController-->
+  </div>
+
+  <div class="control-group">
+    <div class="controls">
+       <p ng-show="!app.features|| app.features.length < 1" class="text-warning">No Features defined.</p>
+
+       <input ng-model="newFeatureTitle.title" type="text" maxlength="100" minlength="5" class="input-xlarge"  on-enter="addFeature()"  placeholder="New feature..." >
+       <button class="btn btn-success" type="button" ng-click="addFeature()">Add</button> 
+       {{newFeatureTitle.title}}
+    </div>
+  </div>
+
+
+</pane>
+
+
+
+
+
+<!-- SCREENSHOTS -->
+
+
+
+
+<pane heading="Screenshots">
+
+
+  <div class="control-group">
+    <label class="control-label">Demo Image</label>
+    <div class="controls">
+      <input type="url" name="imgDemo" ng-model="app.imgDemo">
+      <span ng-show="myForm.imgDemo.$error.url" class="help-inline">Not a URL</span>
+      <a ng-show="app.imgDemo && !myForm.imgDemo.$error.url" href="{{app.imgDemo}}" target="_blank">Show image</a>
+      <br>
+       <img ng-show="app.imgDemo && !myForm.imgDemo.$error.url" style="max-height: 140px;" ng-src="{{app.imgDemo}}" class="img-polaroid">   
+
+    </div>
+  </div>
+
+<script>
+
+function SSEditorController($scope) {
+    $scope.xSSTitle= $scope.screenshot.title
+    $scope.xSSDesc= $scope.screenshot.desc
+    $scope.xSSURL= $scope.screenshot.url
+
+    $scope.$watch('xSSTitle',function(newval, oldval){
+      $scope.screenshot .title=  $scope.xSSTitle
+      $scope.screenshot .dateUpdated=new Date()
+    })
+
+    $scope.$watch('xSSURL',function(newval, oldval){
+      $scope.screenshot .url=  $scope.xSSURL
+      $scope.screenshot .dateUpdated=new Date()
+    })
+
+    $scope.$watch('xSSDesc',function(newval, oldval){
+      $scope.screenshot.desc=  $scope.xSSDesc
+      $scope.screenshot.dateUpdated=new Date()
+    })
+}
+
+
+
+
+</script>
+
+
+  <div ng-repeat="screenshot in app.screenshots">
+
+    <div ng-controller="SSEditorController" >
+  
+      <div class="control-group">
+        <label class="control-label">
+          <img ng-show="xSSURL && !myForm.xSSURL.$error.url" style="max-height: 140px;" ng-src="{{xSSURL}}" class="img-polaroid">
+        </label>
+        <div class="controls">
+          <div class="field_margin_bottom">
+            <input maxlength="100" minlength="5" class="input-xlarge" required ng-model="xSSTitle" name="xSSTitle" placeholder="Title" type="text">
+            <button class="btn btn-danger" type="button" ng-click="app.screenshots.splice($index, 1)"><i class=icon-remove></i></button>
+            <span ng-show="myForm.xSSTitle.$error.required" class="help-inline">Required</span>
+          </div>
+          <div class="field_margin_bottom">
+            <textarea ng-model="xSSDesc" rows="3" placeholder="Detailed description"></textarea>
+          </div>  
+          <div class="field_margin_bottom">
+            <input class="input-xlarge" type="url" name="xSSURL" ng-model="xSSURL" required>
+            <span ng-show="myForm.xSSURL.$error.url" class="help-inline">Not a URL</span>
+            <a ng-show="xSSURL && !myForm.xSSURL.$error.url" href="{{xSSURL}}" target="_blank">Open Screenshot</a>
+          </div>  
+          
+        </div>
+      </div>
+
+     
+    </div><!-- END SSEditorController-->
+  </div>
+
+
+  <div class="control-group">
+    <div class="controls">
+       <p ng-show="!app.screenshots || app.screenshots.length < 1" class="text-warning">No Screenshots defined.</p>
+
+
+       <div class="input-append">
+         <button class="btn  btn-success" type="button" ng-click="addSS()">New screenshot</button>
+       </div>
+    </div>
+  </div>
+
+</pane>
+
+
+
+
+<!-- SOCIAL -->
+
+
+
+
+<pane heading="Social">
+
+  <div class="control-group">
+    <label class="control-label">Twitter</label>
+    <div class="controls">
+      <div class="input-prepend">
+        <span class="add-on">@</span>
+        <input type=text ng-model="app.twitterID" >
+      </div>
+      <a ng-show="app.twitterID" href="http://www.twitter.com/{{app.twitterID}}" target="_blank">Visit Twitter</a>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Google+ Page</label>
+    <div class="controls">
+      <input type=text name=urlGPlus ng-model="app.urlGPlus" >
+      <span ng-show="myForm.urlGPlus.$error.url" class="help-inline">Not a URL</span>
+      <a ng-show="app.urlGPlus&& !myForm.urlGPlus.$error.url" href="{{app.urlGPlus}}" target="_blank">Visit Google+</a>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Blog</label>
+    <div class="controls">
+      <input type=url name=urlBlog ng-model="app.urlBlog" >
+      <span ng-show="myForm.urlBlog.$error.url" class="help-inline">Not a URL</span>
+      <a ng-show="app.urlBlog && !myForm.urlBlog.$error.url" href="{{app.urlBlog}}" target="_blank">Visit blog</a>
+    </div>
+  </div>
+
+
+  <div class="control-group">
+    <label class="control-label">Support Email</label>
+    <div class="controls">
+      <input type=email name=emailSupport ng-model="app.emailSupport" >
+      <span ng-show="myForm.emailSupport.$error.email" class="help-inline">Not valid email</span>
+    </div>
+  </div>
+
+</pane>
+
+
+<!-- BACKEND -->
+
+
+<pane heading="Backend">
+
+  <div class="control-group">
+    <label class="control-label">Public repository</label>
+    <div class="controls">
+      <input type=text ng-model="app.urlRepo" >
+      <span ng-show="myForm.urlRepo.$error.url" class="help-inline">Not a URL</span>
+      <a ng-show="app.urlRepo && !myForm.urlRepo.$error.url" href="{{app.urlRepo}}" target="_blank">Open Repository</a>
+
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">ShufflingSux App ID</label>
+    <div class="controls">
+      <input type=text ng-model="app.ssID" >
+      <a ng-show="app.ssID" href="http://shufflingsux.appspot.com/edit/{{app.ssID}}" target="_blank">Open Editor</a>
+
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">FritzPutty Page</label>
+    <div class="controls">
+      <input type=text ng-model="app.urlFritzPutty" >
+      <span ng-show="myForm.urlFritzPutty.$error.url" class="help-inline">Not a URL</span>
+      <a ng-show="app.urlFritzPutty&& !myForm.urlFritzPutty.$error.url" href="{{app.urlFritzPutty}}" target="_blank">Open Editor</a>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label">Google App Domain</label>
+    <div class="controls">
+      <input type=text ng-model="app.urlGoogleApp" >
+      <a ng-show="app.urlGoogleApp" href="https://www.google.com/a/{{app.urlGoogleApp}}/ServiceLogin?service=CPanel" target="_blank">Open Editor</a>
+    </div>
+  </div>
+
+
+</pane>
+
+
+
+<!-- TODO -->
+
+
+<pane heading="ToDo List">
+
+<script>
+
+function TodoCtrl($scope) {
+  
+ 
+  $scope.addTodo = function() {
+    if (typeof $scope.app.todos == "undefined") $scope.app.todos = []
+    if ($scope.todoText != ''){
+      $scope.app.todos.push({text:$scope.todoText, done:false});
+      $scope.todoText = '';
+      $scope.save()
+    }
+  };
+ 
+  $scope.remaining = function() {
+    var count = 0;
+    angular.forEach($scope.app.todos, function(todo) {
+      count += todo.done ? 0 : 1;
+    });
+    return count;
+  };
+ 
+  $scope.archive = function() {
+    var oldTodos = $scope.app.todos;
+    $scope.app.todos = [];
+    angular.forEach(oldTodos, function(todo) {
+      if (!todo.done) $scope.app.todos.push(todo);
+    });
+    $scope.save()
+  };
+}
+
+</script>
+
+  <div class="control-group" ng-controller="TodoCtrl">
+    <label class="control-label">
+<span>{{remaining()}} of {{app.todos.length}} remaining</span><br>
+      [ <a href="" ng-click="archive()">archive</a> ]
+    </label>
+    <div class="controls">
+
+      <div class="progress">
+       <div class="bar bar-warning" style="width: {{(app.todos | filter:'false').length / app.todos.length *100 }}%;"></div>
+       <div class="bar bar-success" style="width: {{100-( app.todos | filter:'false').length / app.todos.length *100 }}%;"></div>
+
+      </div>
+
+      <ul class="unstyled">
+        <li ng-repeat="todo in app.todos | orderBy:'done'">
+          <label class="checkbox">
+            <input type="checkbox" ng-model="todo.done">
+            <span class="done-{{todo.done}}">{{todo.text}}</span>
+          </label>
+        </li>
+      </ul>
+      <input type="text" ng-model="todoText"  size="30" placeholder="add new todo here">
+      <button ng-click="addTodo()" class="btn btn-success" value="add">Add</button>
+  </div>
+</div>
+
+</pane>
+
+
+
+<pane heading="Preview">
+<div>
+  <div class="span3 bs-docs-sidebar ">
+    <p>Preview of how the app would be displayed in show mode.</p>
+  </div>
+  
+  <div class="span9" ng-switch="loading">
+    <ul ng-switch-when="false" class="thumbnails"> 
+      <li class=thumbnail>
+        <app></app>
+      </li>
+    </ul>
+  </div>
+</div>
+</pane>
+
+
+</tabs>
+
+  <hr>
+
+  <!-- SAVE -->
+
+  <div class="control-group">
+    <div class="controls">
+      <button ng-click="save()" ng-click="save()" ng-disabled="isClean() || myForm.$invalid" class="btn btn-primary">Save</button>
+    </div>
+  </div>
+</form>
