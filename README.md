@@ -23,3 +23,12 @@ Shine with your work.
 ### Start Application
 
 	nodemon
+
+
+## Showcase
+Status: Demo data is displayed only
+Link: http://localhost:8080/index.html#/
+
+## Editor
+The editor can be used to create, edit and display own projects. Data is stored locally in the repository.
+Link: http://localhost:8080/editor.html#/

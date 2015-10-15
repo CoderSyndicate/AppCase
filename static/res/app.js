@@ -114,12 +114,11 @@ app.directive('tagInput', function(){
 
 
 app.run(function($rootScope, $http, $location) {
-  var baseURL = 'http://tiny-tools.appspot.com/webstore/appcase/' //PROD
-  var baseURL = '/webstore/appcase/'
+  var baseURL = '/sfss/data/'
 
   var json2app = function(data){
     c = data
-    if (typeof c == "string") c = JSON.parse(data)
+    //if (typeof c == "string") c = JSON.parse(data)
     if (typeof c.dateCreated== "string") c.dateCreated= new Date(c.dateCreated)
     if (typeof c.dateUpdated== "string") c.dateUpdated= new Date(c.dateUpdated)
     if (typeof c.dateEnded== "string") c.dateEnded= new Date(c.dateEnded)
@@ -143,14 +142,14 @@ app.run(function($rootScope, $http, $location) {
     var cb = callback
     var gid = id
     var gdata = data
-    data = JSON.stringify(data)
+    //data = JSON.stringify(data)
 
-    $http({method: 'POST',  data:$.param({'data':data}), //
-      url:baseURL + 'apps/'+id}).
+    $http({method: 'PUT', data, //
+      url:baseURL + id + '.json'}).
     success(function(data, status) {
       console.log(data,status)
       cb(gid)
-      $rootScope.saveAppBackup(gid,gdata)
+      //$rootScope.saveAppBackup(gid,gdata)
     }).
     error(function(data, status) {
      
@@ -178,7 +177,7 @@ app.run(function($rootScope, $http, $location) {
   // GET APPS //
   // -------- //
   $rootScope.getApps = function(cb){
-    $rootScope.getList(baseURL + 'apps',cb)
+    $rootScope.getList(baseURL,cb)
   }
 
   // ------- //
@@ -188,10 +187,10 @@ app.run(function($rootScope, $http, $location) {
     var cb = callback
 
     $http({method: 'GET',
-      url:baseURL + 'apps/'+id}).
+      url:baseURL +id + '.json'}).
     success(function(data, status) {
-      console.log('getApp',data,status)
-      data = json2app(data) 
+      console.log('getApp',data.data,status)
+      data = json2app(data.data) 
       cb(data)
     }).
     error(function(data, status) {
@@ -211,8 +210,8 @@ app.run(function($rootScope, $http, $location) {
 
       if (typeof data != 'string'){
         var a = [] 
-        for (var i=0,ii=data.values.length;i<ii;i+=1){
-          var c = json2app(data.values[i].value)
+        for (var i=0,ii=data.data.length;i<ii;i+=1){
+          var c = json2app(data.data[i])
 
 
           a.push(c)
@@ -316,6 +315,7 @@ function ShowCtrl($scope, $location) {
 
   $scope.loading = true
   $scope.getApps(function(data){
+    console.log('ShowCtrl.getApps', data)
     $scope.apps = data
     $scope.loading = false
   })
