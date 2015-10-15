@@ -7,10 +7,10 @@
   "description": "Simple FS Storage Service enable a node app to store/retieve JSON objects to/from the filesystem via HTTP",
   "keywords": [],
   "dependencies": {
-    "devmode": "0.0.8",
+    "devmode": "^0.0.8",
     "serve-static": "^1.10.0",
-    "sfss.api.endpoint": "^0.0.*",
-    "sfss.service": "^0.0.*"
+    "sfss.api.endpoint": "*",
+    "sfss.service": "*"
   },
   "devDependencies": {
     "chai": "*",
