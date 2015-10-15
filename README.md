@@ -17,9 +17,9 @@ Shine with your work.
 
 ### Once:
 
-	npm install reload -g
+	npm install -g nodemon
 	
 	
-### Start livereload
+### Start Application
 
-	reload
+	nodemon
