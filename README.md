@@ -24,6 +24,10 @@ Shine with your work.
 
 	nodemon
 
+## For Mac just activate nodemon before via 
+
+. ~/.nvm/nvm.sh
+
 
 ## Showcase
 Status: Demo data is displayed only
